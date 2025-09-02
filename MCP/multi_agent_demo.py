@@ -61,15 +61,15 @@ async def run_agent(query):
                 "args": ["@brightdata/mcp"],
                 "env": {
                     "API_TOKEN": os.getenv("BRIGHT_DATA_API_TOKEN"),
-                    "WEB_UNLOCKER_ZONE": os.getenv("WEB_UNLOCKER_ZONE", "unblocker"),
-                    "BROWSER_ZONE": os.getenv("BROWSER_ZONE", "scraping_browser")
+                    #"WEB_UNLOCKER_ZONE": os.getenv("WEB_UNLOCKER_ZONE", "unblocker"),
+                    #"BROWSER_ZONE": os.getenv("BROWSER_ZONE", "scraping_browser")
                 },
                 "transport": "stdio",
             },
         }
     )
     tools = await client.get_tools()
-    model = init_chat_model(model="openai:gpt-4.1", api_key = os.getenv("OPENAI_API_KEY"))
+    model = init_chat_model(model="openai:gpt-4o-mini", api_key = os.getenv("OPENAI_API_KEY"))
 
     stock_finder_agent = create_react_agent(model, tools, prompt=""" You are a stock research analyst specializing in the Indian Stock Market (NSE). Your task is to select 2 promising, actively traided NSE-listed stocks for short term trading (buy/sell) based on recent performance, news buzz,volume or technical strength.
     Avoid penny stocks and illiquid companies.
@@ -111,7 +111,7 @@ async def run_agent(query):
 
 
     supervisor = create_supervisor(
-        model=init_chat_model("openai:gpt-4.1"),
+        model=init_chat_model("openai:gpt-4o-mini"),
         agents=[stock_finder_agent, market_data_agent, news_alanyst_agent, price_recommender_agent],
         prompt=(
             "You are a supervisor managing four agents:\n"
